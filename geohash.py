@@ -22,11 +22,15 @@ if sys.version_info[0] < 3:
 	LONG_ZERO = long(0)
 
 def _float_hex_to_int(f):
-	if f<-1.0 or f>=1.0:
+	if f<-1.0 or f>1.0:
 		return None
 	
 	if f==0.0:
 		return 1,1
+	
+	# handle latitude == 90
+	if f==1.0:
+		return (1 << 100) - 1, 100
 	
 	h = f.hex()
 	x = h.find("0x1.")
@@ -75,7 +79,7 @@ def _encode_i2c(lat,lon,lat_length,lon_length):
 	return ret[::-1]
 
 def encode(latitude, longitude, precision=12):
-	if latitude >= 90.0 or latitude < -90.0:
+	if latitude > 90.0 or latitude < -90.0:
 		raise Exception("invalid latitude.")
 	while longitude < -180.0:
 		longitude += 360.0

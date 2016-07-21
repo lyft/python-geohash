@@ -63,6 +63,12 @@ class TestDecode(unittest.TestCase):
 		ll=geohash.decode(geohash.encode(51.566141,-0.009434,24))
 		self.assertAlmostEqual(ll[0], 51.566141)
 		self.assertAlmostEqual(ll[1], -0.009434)
+	
+	def test_latitude_equals_90(self):
+		for lon in range(-180,180,45):
+			ll = geohash.decode(geohash.encode(90.0, lon))
+			self.assertAlmostEqual(ll[0], 90.0, 5)
+			self.assertAlmostEqual(ll[1], lon, 5)
 
 class TestNeighbors(unittest.TestCase):
 	def test_empty(self):
